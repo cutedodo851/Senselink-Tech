@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Charades Glove — Sign ↔ Speech ↔ Braille</title>
+  <meta name="description" content="A wearable glove that converts sign to speech and speech to dynamic braille for DeafBlind and Deaf users. Inclusive tech you can trust." />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta property="og:title" content="Charades Glove" />
+  <meta property="og:description" content="Sign to Speech. Speech to Dynamic Braille. One inclusive glove." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="images/og-glove.jpg" />
+  <link rel="icon" href="favicon.svg" />
+  <style>
+    /* Original CSS reset and theme... */
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;line-height:1.6;-webkit-font-smoothing:antialiased}
+    img{max-width:100%;display:block;height:auto}
+    input,button,textarea,select{font:inherit}
+    h1,h2,h3,h4,p{margin:0 0 .75rem 0}
+    /* Theme variables */
+    :root{
+      --bg: #0b1020;
+      --panel: #0f172a;
+      --panel-2: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --brand: #0ea5e9;
+      --brand-2: #22d3ee;
+      --accent: #a78bfa;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --ring: rgba(14,165,233,.35);
+      --shadow: 0 10px 30px rgba(2,6,23,.45);
+      --radius: 16px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f8fafc;
+        --panel: #ffffff;
+        --panel-2: #f1f5f9;
+        --text: #0f172a;
+        --muted: #475569;
+        --shadow: 0 10px 25px rgba(2,6,23,.08);
+      }
+    }
+    body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--text);background:radial-gradient(1200px 600px at 20% -10%,rgba(14,165,233,.15),transparent 40%),radial-gradient(800px 400px at 100% 20%,rgba(167,139,250,.12),transparent 40%),var(--bg);}
+    a{color:inherit}
+    .container{max-width:1200px;margin-inline:auto;padding:clamp(16px,2vw,24px);}
+    .grid{display:grid;gap:clamp(16px,2vw,24px)}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+    @media (max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(16px,2.2vw,24px)}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:.4rem .8rem;background:rgba(255,255,255,.06)}
+    .btn{display:inline-block;border-radius:999px;padding:.9rem 1.2rem;font-weight:600;text-decoration:none;border:1px solid transparent;transition:transform .08s ease,box-shadow .2s ease}
+    .btn:hover{transform: translateY(-2px) scale(1.01);box-shadow:0 12px 22px rgba(14,165,233,.3)}
+    .btn:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+    .btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#00111a;box-shadow:0 10px 30px rgba(14,165,233,.25)}
+    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.18)}
+    header.site{position:sticky;top:0;backdrop-filter:saturate(180%) blur(10px);background:color-mix(in srgb,var(--bg) 60%,transparent);border-bottom:1px solid rgba(255,255,255,.08);z-index:50}
+    header .nav{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.7rem;font-weight:800;letter-spacing:.3px}
+    .brand-logo{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:conic-gradient(from 180deg at 50% 50%,var(--brand),var(--accent),var(--brand));box-shadow:0 6px 16px rgba(167,139,250,.35)}
+    .hero{padding-block:clamp(48px,8vw,96px)}
+    .hero h1{font-size:clamp(30px,4.2vw,56px);line-height:1.05;letter-spacing:-.02em}
+    .hero p.lead{font-size:clamp(16px,1.4vw,20px);color:var(--muted);max-width:70ch}
+    .hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+    .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .feat{display:flex;gap:14px}
+    .icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.25)}
+    .muted{color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    @media (max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+    .stat{padding:18px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);text-align:center}
+    .stat .v{font-size:clamp(22px,2.6vw,30px);font-weight:800}
+    .stat .l{font-size:14px;color:var(--muted)}
+    .steps{counter-reset:step}
+    .step{position:relative;padding-left:56px}
+    .step::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:.1rem;width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#00111a;font-weight:800}
+    table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px}
+    th,td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
+    th{text-align:left;color:var(--muted);font-weight:600;background:rgba(255,255,255,.04)}
+    tr:last-child td{border-bottom:none}
+    details{border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.05)}
+    summary{cursor:pointer;font-weight:600}
+    details+details{margin-top:12px}
+    .footer{border-top:1px solid rgba(255,255,255,.1);padding-block:28px;color:var(--muted)}
+    .skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip:focus{left:16px;top:16px;width:auto;height:auto;background:var(--panel);color:var(--text);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow)}
+    .field{display:grid;gap:6px}
+    .input{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;color:var(--text)}
+    .input:focus{outline:3px solid var(--ring);outline-offset:2px}
+    textarea.input{min-height:120px;resize:vertical}
+    .center{text-align:center}
+    .mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}
+    .mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}
+    .caps{letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;color:var(--muted)}
+    .nowrap{white-space:nowrap}
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">Skip to content</a>
+  <header class="site">
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true"></span>
+        <span>Charades Glove</span>
+      </div>
+      <nav aria-label="Main">
+        <a class="pill" href="#features">Features</a>
+        <a class="pill" href="#how">How it works</a>
+        <a class="pill" href="#specs">Specs</a>
+        <a class="pill" href="#pricing">Pricing</a>
+        <a class="pill" href="#store">Store</a>
+        <a class="pill" href="#partners">Partners</a>
+        <a class="pill" href="#feedback">Feedback</a>
+        <a class="pill" href="#contact">Contact</a>
+        
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="container hero">
+      <div class="grid grid-2" style="align-items:center">
+        <div>
+          <span class="pill mb-3" aria-label="Inclusive design badge">Inclusive • Accessible • Private</span>
+          <h1>Speech to Braille. Sign to Speech. <span class="nowrap">One Glove.</span></h1>
+          <p class="lead mt-3">Charades Glove converts sign language into natural speech and translates spoken words into Braille - either on a refreshable braille display device or through vibration motors — empowering Deaf and Deafblind users in everyday life.</p>
+          <div class="cta">
+            <a href="#store" class="btn primary">Shop Now</a>
+            <a href="#features" class="btn ghost">See features</a>
+          </div>
+          <div class="badges" aria-label="Trust badges">
+            <span class="pill">CE Certified</span>
+            <span class="pill">HIPAA‑aware design</span>
+            <span class="pill">Patented in India and USA</span>
+          </div>
+        </div>
+        <div>
+          <figure class="card" aria-labelledby="hero-figcap">
+            <img src="Picture1.png" alt="Charades glove with sign language translator and braille module" />
+            <figcaption id="hero-figcap" class="muted mt-2">Prototype shown. Final design may vary.</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="stats mt-6" aria-label="Key stats">
+        <div class="stat"><div class="v">95%+</div><div class="l">Gesture accuracy*</div></div>
+        <div class="stat"><div class="v">24 hrs</div><div class="l">Battery (mixed use)</div></div>
+        <div class="stat"><div class="v">Dynamic ⠙⠎</div><div class="l">Refreshable Braille</div></div>
+        <div class="stat"><div class="v">Offline</div><div class="l">On‑device processing</div></div>
+      </div>
+      <p class="muted mt-2" style="font-size:.9rem">*Measured internally—real‑world performance may vary by user and environment.</p>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="container">
+      <div class="grid grid-3">
+        <div class="card feat">
+          <div class="icon" aria-hidden="true">🖐️</div>
+          <div>
+            <h3>Sign → Speech</h3>
+            <p class="muted">Accurately maps gestures using finger and motion sensors and outputs natural sounding speech via connected device.</p>
+          </div>
+        </div>
+        <div class="card feat">
+          <div class="icon" aria-hidden="true">🔊</div>
+          <div>
+            <h3>Speech → Braille</h3>
+            <p class="muted">Converts spoken words into dynamic refreshable Braille or vibration-based tactile cues.</p>
+          </div>
+        </div>
+        <div class="card feat">
+          <div class="icon" aria-hidden="true">🔒</div>
+          <div>
+            <h3>Private by Design</h3>
+            <p class="muted">Processes everything on-device; optional encrypted sync via the companion app.</p>
+          </div>
+        </div>
+        <div class="card feat">
+          <div class="icon" aria-hidden="true">⚡</div>
+          <div>
+            <h3>All‑Day Battery</h3>
+            <p class="muted">Fast USB‑C charging; lasts up to 24 hours. Swappable module for extended use.</p>
+          </div>
+        </div>
+        <div class="card feat">
+          <div class="icon" aria-hidden="true">🌐</div>
+          <div>
+            <h3>Subscriptions and attachments</h3>
+            <p class="muted">Language packs for multilingual support and text-to-braille software, installation via app(still under development). Attach an obstacle detector to help safely guide your way - through offline stores or nearby partnered NGO. </p>
+          </div>
+        </div>
+        <div class="card feat">
+          <div class="icon" aria-hidden="true">🧩</div>
+          <div>
+            <h3>Comfort‑First</h3>
+            <p class="muted">Breathable fabric, adjustable straps.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="container mt-8">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2 class="mb-2">How it works</h2>
+          <div class="steps mt-4">
+            <div class="step mb-4">
+              <h3>Wear & Pair</h3>
+              <p class="muted">Put on the glove and pair with the companion app or use standalone.</p>
+            </div>
+            <div class="step mb-4">
+              <h3>Choose Mode</h3>
+              <p class="muted">Toggle between Sign→Speech and Speech→Braille via buttons provided.</p>
+            </div>
+            <div class="step mb-4">
+              <h3>Communicate Freely</h3>
+              <p class="muted">Speak through sign, and feel braille in real-time. Use the app to customize speed.</p>
+            </div>
+          </div>
+        </div>
+         
+   
+    </section>
+
+    <!-- SPECS -->
+    <section id="specs" class="container mt-8">
+      <div class="card">
+        <h2 class="mb-2">Tech Specs</h2>
+        <table aria-describedby="spec-note">
+          <thead>
+            <table>
+               
+            <tr><th>Category</th><th>Details</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Sensors</td><td>9‑axis IMU, flex digit sensors, pressure nodes, mic array</td></tr>
+            <tr><td>Processor</td><td>Low‑power AI MCU with secure enclave for on‑device inference</td></tr>
+            <tr><td>Connectivity</td><td>Bluetooth LE, USB‑C; optional Wi‑Fi via app</td></tr>
+            <tr><td>Battery</td><td>1,800 mAh; USB‑C fast-charge; ~24h mixed usage</td></tr>
+            <tr><td>Braille</td><td> Advanced 20‑dot Strip for vibration based glove and 20-cell orbit reader for the premium version ; adjustable speed</td></tr>
+            <tr><td>Compliance</td><td>CE, FCC, RoHS; skin-safe materials</td></tr>
+          </tbody>
+        </table>
+        <p id="spec-note" class="muted mt-2">Specs based on pre-production models and may be updated.</p>
+      </div>
+    </section>
+
+    <!-- UPDATED PRICING -->
+    <section id="pricing" class="container mt-8">
+      <h2 class="mb-3">Pricing (INR)</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <p class="caps mb-1">Refreshable Braille Version</p>
+          <h3 class="mb-1">₹47,000</h3>
+          <p class="muted mb-3">Includes dynamic braille display, charger.</p>
+          <ul class="muted">
+            <li>• Sign → Speech</li>
+            <li>• Speech → Dynamic Braille</li>
+            <li>• On‑device AI & app</li>
+          </ul>
+      </div>
+       
+        <div class="card">
+          <p class="caps mb-1">Vibration‑Based Braille Version</p>
+          <h3 class="mb-1">₹12,000</h3>
+          <p class="muted mb-3">Vibration patterns replace braille cell for budget-friendly access.</p>
+          <ul class="muted">
+            <li>• Sign → Speech</li>
+            <li>• Speech → Vibration cues</li>
+            <li>• Companion app enabled</li>
+          </ul>
+       </div>  
+       
+    <!-- STORE SECTION -->
+    <section id="store" class="container mt-8">
+      <h2 class="mb-3">Order Your Charades Glove</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 class="mb-2">Refreshable Braille Version</h3>
+          <p class="muted mb-3">Dynamic refreshable braille display built-in.</p>
+          <p><strong>Price:</strong> ₹47,000</p>
+          <form action="#" method="post" class="grid" style="gap:14px" aria-label="Pre-Order form">
+            <div class="field">
+              <label for="name1">Full Name</label>
+              <input id="name1" name="name" class="input" required />
+            </div>
+            <div class="field">
+              <label for="email1">Email</label>
+              <input id="email1" name="email" type="email" class="input" required />
+            </div>
+            <div class="field">
+              <label for="address1">Shipping Address</label>
+              <input id="address1" name="address" class="input" required />
+            </div>
+          <button type="submit" class="btn primary">Pre-order for ₹47,000</button>
+          </form>
+        </div>
+        <div class="card">
+          <h3 class="mb-2">Vibration‑Based Braille Version</h3>
+          <p class="muted mb-3">Tactile feedback via vibration motors.</p>
+          <p><strong>Price:</strong> ₹12,000</p>
+          <form action="#" method="post" class="grid" style="gap:14px" aria-label="Pre-Order form">
+            <div class="field">
+              <label for="name2">Full Name</label>
+              <input id="name2" name="name" class="input" required />
+            </div>
+            <div class="field">
+              <label for="email2">Email</label>
+              <input id="email2" name="email" type="email" class="input" required />
+            </div>
+            <div class="field">
+              <label for="address2">Shipping Address</label>
+              <input id="address2" name="address" class="input" required />
+            </div>
+            <button type="submit" class="btn primary">Pre-order for ₹12,000</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+     
+   
+    
+
+
+ <!-- NGO Partners -->
+    <section id="partners" class="mt-8">
+      <h2 class="mb-3">NGO Partners Supporting Inclusion</h2>
+      <div class="grid grid-3">
+        <div class="card tooltip">
+          <h3>Sense India</h3>
+          <p class="muted">DeafBlind support across 23 states.</p>
+          <span class="tooltiptext">80,000+ lives impacted.</span>
+        </div>
+        <div class="card tooltip">
+          <h3>DEF</h3>
+          <p class="muted">Deaf Enabled Foundation.</p>
+          <span class="tooltiptext">Pan-India presence.</span>
+        </div>
+        <div class="card tooltip">
+          <h3>Deaf Enabled</h3>
+          <p class="muted">Vidya Sagar.</p>
+          <span class="tooltiptext">Chennai based.</span>
+        </div>
+      </div>
+    </section>
+       </ul>
+    </section>
+
+<!-- Feedback Portal -->
+    <section id="feedback" class="mt-8">
+      <div class="card">
+        <h2>We value your feedback 💬</h2>
+        <p class="muted">Anonymous or share your name—it’s your choice.</p>
+        <form class="grid" style="gap:14px">
+          <div class="field"><label for="feedback-name">Name (optional)</label><input id="feedback-name" name="name" class="input" placeholder="Your name" /></div>
+          <div class="field"><label for="feedback-msg">Your Feedback</label><textarea id="feedback-msg" name="feedback" class="input" required placeholder="Ideas or suggestions..."></textarea></div>
+          <button type="submit" class="btn primary">Submit Feedback</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="container mt-8">
+      <h2 class="mb-2">FAQ</h2>
+      <details>
+        <summary>Does it work offline?</summary>
+        <p class="muted mt-2">Yes. Core models run locally; you can download language packs via the app.</p>
+      </details>
+      <details>
+        <summary>Is my data private?</summary>
+        <p class="muted mt-2">By default, no audio or sign data leaves the glove. Cloud sync is optional and encrypted.</p>
+      </details>
+      <details>
+        <summary>Which sign languages are supported?</summary>
+        <p class="muted mt-2">ASL and ISL is supported by default. Additional packs available via app.</p>
+      </details>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="container mt-8">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2 class="mb-2">Contact sales</h2>
+          <form action="#" method="post" aria-label="Contact form" class="grid" style="gap:14px">
+            <div class="field"><label for="name">Full name</label><input id="name" name="name" class="input" placeholder="Alex Doe" required /></div>
+            <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" class="input" placeholder="you@example.com" required /></div>
+            <div class="field"><label for="org">Organization (optional)</label><input id="org" name="org" class="input" placeholder="School / Company" /></div>
+            <div class="field"><label for="msg">How can we help?</label><textarea id="msg" name="message" class="input" placeholder="Tell us about your needs" required></textarea></div>
+            <div><button class="btn primary" type="submit">Send message</button></div>
+            <p class="muted" style="font-size:.9rem">By submitting, you agree to our <a href="#" aria-label="Read privacy policy">privacy policy</a>.</p>
+          </form>
+        </div>
+        <div class="card">
+          <h2 class="mb-2">Where to find us</h2>
+          <p class="muted">Email: Senselink.Tech@gmail.com <br/>Phone:9108487033<br/>Address:Hulimavu,Bangalore-
+India 
+</p>
+          <figure class="mt-4">
+           
+           
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- BACK TO TOP -->
+    <div class="container mt-6 center">
+      <a href="#main" class="btn ghost">⬆ Back to top</a>
+    </div>
+  </main>
+
+  <footer class="container footer">
+    <div class="grid grid-2">
+      <p>© <span id="year">2025</span> SenseLinkTech Labs · All rights reserved.</p>
+      <p class="center">Built with accessibility and inclusion at heart ♿</p>
+    </div>
+  </footer>
+</body>
+</html> 
